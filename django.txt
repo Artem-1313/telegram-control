@@ -1,0 +1,4 @@
+pip install django
+django-admin startproject <name> # создать проэкт
+python manage.py runserver
+python manage.py startapp <name>
