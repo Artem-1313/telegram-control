@@ -2,3 +2,19 @@ pip install django
 django-admin startproject <name> # создать проэкт
 python manage.py runserver
 python manage.py startapp <name>
+-------------------------------
+python manage.py makemigrations  
+python manage.py sqlmigrate <name> <number> # see sql code 
+python manage.py migrate  
+---------
+User.objects.all()
+User.objectss.filter(username="artem").first()
+User.object.get(id=1)
+post_1=Post(title='asd',content='adad', author=user)
+post_1.save()
+user.post_set.all() # get all posts of user 
+user.post_set.create(title='asd',content='adad')
+
+----
+python manage.py migrate # create table auth_user
+python manage.py createsuperuser
