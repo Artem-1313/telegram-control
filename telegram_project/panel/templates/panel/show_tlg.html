@@ -1,0 +1,24 @@
+{% extends 'panel/base.html' %}
+{% block content %}
+<h1>TELEGRAM CONTROL PANEL PAGE!</h1>
+
+
+{{ description }}
+{% for i in tlg %}
+
+{% if  i.status   %}
+   <div> <input type="checkbox" name="{{ i.unit }}" checked>
+    <label>{{ i.unit }}</label>
+       </div>
+{% else %}
+    <div> <input type="checkbox" name="{{ i.unit }}" >
+    <label >{{ i.unit }}</label>
+    </div>
+{% endif %}
+
+{% endfor %}
+
+
+
+
+{% endblock%}

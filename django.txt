@@ -18,3 +18,7 @@ user.post_set.create(title='asd',content='adad')
 ----
 python manage.py migrate # create table auth_user
 python manage.py createsuperuser
+---
+pip install django-crispy-forms
+add crispy to installed_app
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
