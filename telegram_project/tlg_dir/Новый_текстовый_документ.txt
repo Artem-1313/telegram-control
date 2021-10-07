@@ -1,0 +1,10 @@
+# Чтобы не было ошибки DATA TOO LARGE
+SET @@global.sql_mode= 'NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION';
+SET @@global.sql_mode= '';
+# Узнать размеры колонок
+ SELECT DATA_TYPE, data_type, character_maximum_length  FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='article'
+ # вставить в таблицу
+ #INSERT INTO admin  (login, psw) VALUES ('artem', 'pbkdf2:sha256:150000$w1FeXFtg$1a322ba3afcf8e2173d8a6dbd31338debf7448da165760ca83df9820a01119a9');
+ 
+# Узнать размер ячейки
+select sum(char_length(text)) from article;

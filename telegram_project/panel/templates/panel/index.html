@@ -1,25 +1,47 @@
 {% extends 'panel/base.html' %}
 {% block content %}
-<h1>TELEGRAM CONTROL PANEL PAGE!</h1>
 
 
-         {% for i in tlg %}
-                {{ i.description }}
-         {% endfor %}
-
-                {% for i in exec %}
-
-{% if  i.status   %}
-   <div> <input type="checkbox" name="{{ i.unit }}" checked>
-    <label>{{ i.unit }}</label>
-       </div>
-{% else %}
-    <div> <input type="checkbox" name="{{ i.unit }}" >
-    <label >{{ i.unit }}</label>
-    </div>
-{% endif %}
+    <table class="table table-striped">
+        <thead class="">
+        <tr>
+            <th scope="col">Дата створення: </th>
+            <th scope="col">Виконати до: </th>
+            <th scope="col">Опис телеграми </th>
+            <th scope="col">Номер вихідної телеграми </th>
+            <th scope="col">Статус </th>
+            <th scope="col">Змінити </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in tlg %}
+        <tr>
+            <td> {{ i.date_create }}</td>
+            <td> {{ i.deadline }}</td>
+            <td> {{ i.description }}</td>
+            <td> {{ i.tlg_number }}</td>
+             <td> {{ i.status }}</td>
+            <td> <button class="btn btn-info"><a href="{% url 'show-tlg' i.id %}" style="color:green;">Змінити</a></button></td>
+        {% endfor %}
+</tr>
+        </tbody>
+    </table>
+{% for i in tlg %}
 
 {% endfor %}
+<!--                {% for i in exec %}-->
+<!--{{ i.description }}-->
+<!--{% if  i.status   %}-->
+<!--   <div> <input type="checkbox" name="{{ i.unit }}" checked>-->
+<!--    <label>{{ i.unit }}</label>-->
+<!--       </div>-->
+<!--{% else %}-->
+<!--    <div> <input type="checkbox" name="{{ i.unit }}" >-->
+<!--    <label >{{ i.unit }}</label>-->
+<!--    </div>-->
+<!--{% endif %}-->
+
+<!--{% endfor %}-->
 
 
 
