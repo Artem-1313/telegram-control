@@ -22,30 +22,14 @@
             <td> {{ i.tlg_number }}</td>
              <td> {{ i.status }}</td>
             <td>
+                <button class="btn btn-info"><a href="{% url 'telegram-update' i.id %}" style="color:green;">UPDATE</a></button>
                 <button class="btn btn-info"><a href="{% url 'telegram-detail' i.id %}" style="color:green;">EXAMPLE</a></button>
+                 <button class="btn btn-info"><a href="{% url 'telegram-delete' i.id %}" style="color:green;">DELETE</a></button>
             </td>
         {% endfor %}
 </tr>
         </tbody>
     </table>
-{% for i in tlg %}
-
-{% endfor %}
-<!--                {% for i in exec %}-->
-<!--{{ i.description }}-->
-<!--{% if  i.status   %}-->
-<!--   <div> <input type="checkbox" name="{{ i.unit }}" checked>-->
-<!--    <label>{{ i.unit }}</label>-->
-<!--       </div>-->
-<!--{% else %}-->
-<!--    <div> <input type="checkbox" name="{{ i.unit }}" >-->
-<!--    <label >{{ i.unit }}</label>-->
-<!--    </div>-->
-<!--{% endif %}-->
-
-<!--{% endfor %}-->
-
-
-
+{
 
 {% endblock%}
