@@ -20,6 +20,10 @@ class Telegrams(models.Model):
     def __str__(self):
         return self.description
 
+    def get_id(self):
+        return str(self.id)
+
+
 
 class Executors(models.Model):
     unit = models.CharField(max_length=100)

@@ -21,7 +21,9 @@
             <td> {{ i.description }}</td>
             <td> {{ i.tlg_number }}</td>
              <td> {{ i.status }}</td>
-            <td> <button class="btn btn-info"><a href="{% url 'show-tlg' i.id %}" style="color:green;">Змінити</a></button></td>
+            <td>
+                <button class="btn btn-info"><a href="{% url 'telegram-detail' i.id %}" style="color:green;">EXAMPLE</a></button>
+            </td>
         {% endfor %}
 </tr>
         </tbody>

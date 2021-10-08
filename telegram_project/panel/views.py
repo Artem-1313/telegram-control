@@ -3,19 +3,20 @@ from django.http import HttpResponse
 from .models import Telegrams, Executors
 from .forms import AddTelegram
 from django.contrib.auth.models import User
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 
 # Create your views here.
 
 
 def index(request):
-    return render(request, 'panel/index.html', { 'tlg':Telegrams.objects.all()})
+    return render(request, 'panel/index.html' )
 
 
 class TelegramsListView(ListView):
     model = Telegrams
     template_name = 'panel/index.html'
     context_object_name = "tlg"
+
 
     # def get_context_data(self, **kwargs):
     #     # Call the base implementation first to get a context
@@ -24,9 +25,24 @@ class TelegramsListView(ListView):
     #     context['exec'] = Executors.objects.all()
     #     return context
 
-def show_tlg(request, i):
-    tlg = Telegrams.objects.get(id=i)
-    return render(request, 'panel/show_tlg.html', { 'tlg': tlg.executors_set.all(), 'telega':tlg})
+
+# def show_tlg(request, i):
+#     tlg = Telegrams.objects.get(id=i)
+#     return render(request, 'panel/show_tlg.html', { 'tlg': tlg.executors_set.all(), 'telega':tlg})
+
+
+class TelegramDetailView(DetailView):
+    model = Telegrams
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(TelegramDetailView, self).get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        tlg = Telegrams.objects.get(id=self.object.get_id())
+        context['tlg'] = tlg.executors_set.all()
+        return context
+
+
 
 
 def add_tlg(request):
