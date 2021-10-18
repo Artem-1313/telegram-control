@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+  {% for i in ttt %}
+
+{% if  i.status   %}
+   <div> <input type="checkbox" name="test"  value="{{ i.unit }}" checked>
+    <label>{{ i.unit }}</label>
+       </div>
+{% else %}
+    <div> <input type="checkbox" name="test" value="{{ i.unit }}">
+    <label >{{ i.unit }}</label>
+    </div>
+{% endif %}
+
+{% endfor %}
+
+  <button type="submit">OK</button>
+
+  </form>
+
+
+</body>
+</html>

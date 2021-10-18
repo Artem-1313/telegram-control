@@ -9,10 +9,21 @@
         {{ form|crispy }}
         <button type="submit">OK</button>
     </form>
-
-{{ tlg }}
 </div>
+СПИСОК ЧАСТИН
+{% for i in list %}
+
+{% if i in ttt %}
+   <div> <input type="checkbox" name="test"  value="{{ i }}" checked>
+         <label> {{ i }} </label>
+   </div>
+{% else %}
+     <div> <input type="checkbox" name="test"  value="{{ i }}" >
+         <label> {{ i }} </label>
+   </div>
+{% endif %}
 
 
+{% endfor %}
 
 {% endblock%}

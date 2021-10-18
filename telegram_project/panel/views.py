@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Telegrams, Executors
-from .forms import AddTelegram
+from .forms import AddTelegram, CheckForms
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView
 from django.contrib.auth.mixins import UserPassesTestMixin
@@ -53,32 +53,37 @@ class TelegramsDeleteView(UserPassesTestMixin, DeleteView):
 class TelegramsUpdateView(UpdateView):
     model = Telegrams
     form_class = AddTelegram
-
-    def form_valid(self, form):
-            executors = form.cleaned_data.get('executors')
-            user = User.objects.get(id=self.self.object.get_id())
-            description = form.cleaned_data.get('description')
-            deadline = form.cleaned_data.get('deadline')
-            tlg_scan = form.cleaned_data.get('tlg_scan')
-            tlg_number = form.cleaned_data.get('tlg_number')
-            note = form.cleaned_data.get('note')
-            confirm = form.cleaned_data.get('confirm')
-            priority = form.cleaned_data.get('priority')
-
-            tlg = Telegrams(deadline=deadline, description=description, author=user, tlg_scan=tlg_scan,
-                            tlg_number=tlg_number, note=note, confirm=confirm, priority=priority)
-            tlg.save()
-
-            for i in executors:
-                tlg.executors_set.create(unit=i)
+    success_url = "/panel/"
+    template_name = "panel/telegrams_update.html"
+    #fields = ['description', 'deadline', 'tlg_scan', 'tlg_number', 'note', 'confirm', 'priority', 'author']
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(TelegramsUpdateView, self).get_context_data(**kwargs)
         # Add in a QuerySet of all the books
         tlg = Telegrams.objects.get(id=self.object.get_id())
-        context['tlg'] = "tlg.executors_set.all()"
+        context['list']= ['A2326','A0355','A1314']
+        context['ttt'] = ['A2326','A0355']
         return context
+
+
+def CheckUnits(request, pk):
+    tlg = Telegrams.objects.get(id=pk)
+    ttt = tlg.executors_set.all()
+    print(tlg.id)
+    if request.method == 'POST':
+        for i in ttt:
+            print(f"{i.unit}+{i.status}")
+            Executors.objects.filter(telegrams_id=tlg.id, unit=i.unit).update(status=False)
+        sss = request.POST
+        print(sss.getlist('test'))
+
+        for i in sss.getlist('test'):
+            print(i)
+            Executors.objects.filter(telegrams_id=tlg.id, unit=i).update(status=True)
+
+    return render(request, 'panel/telegrams_check.html', {'ttt': ttt, })
+
 
 # class AddExample(CreateView):
 #     model = Telegrams
