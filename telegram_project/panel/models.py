@@ -3,6 +3,10 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 
 # Create your models here.
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    print(instance.pk)
+    return 'tlg_{0}/{1}'.format(instance.author_id, filename)
 
 
 class Telegrams(models.Model):
@@ -10,7 +14,7 @@ class Telegrams(models.Model):
     date_create = models.DateTimeField(default=timezone.now)
     description = models.TextField()
     deadline = models.DateTimeField(default=timezone.now)
-    tlg_scan = models.FileField(upload_to='tlg_dir/', null=True, blank=True)
+    tlg_scan = models.FileField(upload_to=user_directory_path, null=True, blank=True)
     tlg_number = models.CharField(max_length=100, null=True)
     note = models.CharField(max_length=5000, null=True, blank=True)
     confirm = models.BooleanField(default=False)
@@ -22,7 +26,6 @@ class Telegrams(models.Model):
 
     def get_id(self):
         return str(self.id)
-
 
 
 class Executors(models.Model):

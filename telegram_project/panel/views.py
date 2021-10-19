@@ -53,18 +53,20 @@ class TelegramsDeleteView(UserPassesTestMixin, DeleteView):
 
 class TelegramsUpdateView(UpdateView):
     model = Telegrams
-    #form_class = AddTelegram
+    # form_class = AddTelegram
     success_url = "/panel/"
     template_name = "panel/telegrams_update.html"
-    fields = ['description', 'deadline', 'tlg_scan', 'tlg_number', 'note', 'confirm', 'priority',]
+    fields = ['description', 'deadline', 'tlg_scan', 'tlg_number', 'note', 'confirm', 'priority', ]
 
     def get_units_db(self):
         tlg = Telegrams.objects.get(id=self.object.get_id())
+        self.tlg_output = Telegrams.objects.get(id=self.object.get_id())
+        print(f"{tlg} sad")
         tlg_executors = tlg.executors_set.all()
         tlg_exec_list = []
         for i in tlg_executors:
             tlg_exec_list.append(i.unit)
-            #print(i.unit)
+        # print(i.unit)
         return tlg_exec_list
 
     def get_context_data(self, **kwargs):
@@ -72,7 +74,7 @@ class TelegramsUpdateView(UpdateView):
         context = super(TelegramsUpdateView, self).get_context_data(**kwargs)
         # Add in a QuerySet of all the books
         tlg_exec_list = self.get_units_db()
-        context['list'] = ['A2326', 'A0355', 'A1314', 'A1214']
+        context['list'] = ['A2326', 'A0355', 'A1314', 'A1214', 'A0501']
         context['ttt'] = tlg_exec_list
         return context
 
@@ -80,20 +82,34 @@ class TelegramsUpdateView(UpdateView):
         units_test = self.request.POST.getlist('test1')
         units_db = self.get_units_db()
         select_units = self.request.POST.getlist('test')
-        # print(units_test)
-        # print(units_db)
-        # delete executors-units from db
+
+        # required for checkboxes
         if len(units_test) == 0 and len(select_units) == 0:
             messages.warning(self.request, 'error')
             return redirect('telegram-update', self.object.get_id())
-
+        # delete executors-units from db
         if list(set(units_db).symmetric_difference(set(units_test))):
             print("DELETE")
             print(set(units_db).symmetric_difference(set(units_test)))
+            l = list(set(units_db).symmetric_difference(set(units_test)))
+            for i in l:
+                Executors.objects.filter(telegrams_id=self.object.get_id(), unit=i).delete()
+
         # add executors-units to db
         if select_units:
             print("ADD")
             print(select_units)
+            for i in select_units:
+                self.tlg_output.executors_set.create(unit=i)
+        # section update telegram information
+        description = form.cleaned_data.get('description')
+        deadline = form.cleaned_data.get('deadline')
+        tlg_scan = form.cleaned_data.get('tlg_scan')
+        tlg_number = form.cleaned_data.get('tlg_number')
+        note = form.cleaned_data.get('note')
+        confirm = form.cleaned_data.get('confirm')
+        priority = form.cleaned_data.get('priority')
+        print(tlg_number)
 
         return redirect('panel-home')
 
@@ -115,30 +131,6 @@ def CheckUnits(request, pk):
 
     return render(request, 'panel/telegrams_check.html', {'ttt': ttt, })
 
-
-# class AddExample(CreateView):
-#     model = Telegrams
-#     form_class = AddTelegram
-#     #fields = ['description', 'deadline', 'tlg_scan', 'tlg_number', 'note', 'confirm', 'priority', 'author']
-#
-#     def form_valid(self, form):
-#         executors = form.cleaned_data.get('executors')
-#         user = User.objects.get(id=1)
-#         description = form.cleaned_data.get('description')
-#         deadline = form.cleaned_data.get('deadline')
-#         tlg_scan = form.cleaned_data.get('tlg_scan')
-#         tlg_number = form.cleaned_data.get('tlg_number')
-#         note = form.cleaned_data.get('note')
-#         confirm = form.cleaned_data.get('confirm')
-#         priority = form.cleaned_data.get('priority')
-#
-#         tlg = Telegrams(deadline=deadline, description=description, author=user, tlg_scan=tlg_scan,
-#                         tlg_number=tlg_number, note=note, confirm=confirm, priority=priority)
-#         tlg.save()
-#
-#         #executors = form.cleaned_data.get('executors')
-#         for i in executors:
-#             tlg.executors_set.create(unit=i)
 
 
 def add_tlg(request):
