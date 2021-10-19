@@ -7,14 +7,11 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {{ form|crispy }}
-        <button type="submit">OK</button>
-    </form>
-</div>
-СПИСОК ЧАСТИН
+        СПИСОК ЧАСТИН
 {% for i in list %}
 
 {% if i in ttt %}
-   <div> <input type="checkbox" name="test"  value="{{ i }}" checked>
+   <div> <input type="checkbox" name="test1"  value="{{ i }}" checked>
          <label> {{ i }} </label>
    </div>
 {% else %}
@@ -25,5 +22,15 @@
 
 
 {% endfor %}
+        <button type="submit">OK</button>
+    </form>
+</div>
 
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+            {{ message }}
+    {% endfor %}
+</div>
+{% endif %}
 {% endblock%}

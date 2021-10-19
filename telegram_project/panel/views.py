@@ -1,10 +1,11 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect
 from .models import Telegrams, Executors
 from .forms import AddTelegram, CheckForms
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib import messages
 
 
 # Create your views here.
@@ -52,19 +53,49 @@ class TelegramsDeleteView(UserPassesTestMixin, DeleteView):
 
 class TelegramsUpdateView(UpdateView):
     model = Telegrams
-    form_class = AddTelegram
+    #form_class = AddTelegram
     success_url = "/panel/"
     template_name = "panel/telegrams_update.html"
-    #fields = ['description', 'deadline', 'tlg_scan', 'tlg_number', 'note', 'confirm', 'priority', 'author']
+    fields = ['description', 'deadline', 'tlg_scan', 'tlg_number', 'note', 'confirm', 'priority',]
+
+    def get_units_db(self):
+        tlg = Telegrams.objects.get(id=self.object.get_id())
+        tlg_executors = tlg.executors_set.all()
+        tlg_exec_list = []
+        for i in tlg_executors:
+            tlg_exec_list.append(i.unit)
+            #print(i.unit)
+        return tlg_exec_list
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super(TelegramsUpdateView, self).get_context_data(**kwargs)
         # Add in a QuerySet of all the books
-        tlg = Telegrams.objects.get(id=self.object.get_id())
-        context['list']= ['A2326','A0355','A1314']
-        context['ttt'] = ['A2326','A0355']
+        tlg_exec_list = self.get_units_db()
+        context['list'] = ['A2326', 'A0355', 'A1314', 'A1214']
+        context['ttt'] = tlg_exec_list
         return context
+
+    def form_valid(self, form):
+        units_test = self.request.POST.getlist('test1')
+        units_db = self.get_units_db()
+        select_units = self.request.POST.getlist('test')
+        # print(units_test)
+        # print(units_db)
+        # delete executors-units from db
+        if len(units_test) == 0 and len(select_units) == 0:
+            messages.warning(self.request, 'error')
+            return redirect('telegram-update', self.object.get_id())
+
+        if list(set(units_db).symmetric_difference(set(units_test))):
+            print("DELETE")
+            print(set(units_db).symmetric_difference(set(units_test)))
+        # add executors-units to db
+        if select_units:
+            print("ADD")
+            print(select_units)
+
+        return redirect('panel-home')
 
 
 def CheckUnits(request, pk):
