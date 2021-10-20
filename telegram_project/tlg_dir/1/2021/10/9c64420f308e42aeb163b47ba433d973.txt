@@ -1,0 +1,5 @@
+ssh keygen -b 4096
+
+ scp ~/.ssh/id_rsa.pub artem@192.168.200.2:~/.ssh/authorized_keys
+ 
+ отключаем на сервере авторизацию по паролям.

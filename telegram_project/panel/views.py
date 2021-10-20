@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib import messages
-
+import os
 
 # Create your views here.
 
@@ -20,11 +20,6 @@ class TelegramsListView(ListView):
     template_name = 'panel/index.html'
     context_object_name = "tlg"
     ordering = ['-date_create']
-
-
-# def show_tlg(request, i):
-#     tlg = Telegrams.objects.get(id=i)
-#     return render(request, 'panel/show_tlg.html', { 'tlg': tlg.executors_set.all(), 'telega':tlg})
 
 
 class TelegramDetailView(DetailView):
@@ -58,10 +53,10 @@ class TelegramsUpdateView(UpdateView):
     template_name = "panel/telegrams_update.html"
     fields = ['description', 'deadline', 'tlg_scan', 'tlg_number', 'note', 'confirm', 'priority', ]
 
+    @property
     def get_units_db(self):
         tlg = Telegrams.objects.get(id=self.object.get_id())
         self.tlg_output = Telegrams.objects.get(id=self.object.get_id())
-        print(f"{tlg} sad")
         tlg_executors = tlg.executors_set.all()
         tlg_exec_list = []
         for i in tlg_executors:
@@ -73,14 +68,14 @@ class TelegramsUpdateView(UpdateView):
         # Call the base implementation first to get a context
         context = super(TelegramsUpdateView, self).get_context_data(**kwargs)
         # Add in a QuerySet of all the books
-        tlg_exec_list = self.get_units_db()
+        tlg_exec_list = self.get_units_db
         context['list'] = ['A2326', 'A0355', 'A1314', 'A1214', 'A0501']
         context['ttt'] = tlg_exec_list
         return context
 
     def form_valid(self, form):
         units_test = self.request.POST.getlist('test1')
-        units_db = self.get_units_db()
+        units_db = self.get_units_db
         select_units = self.request.POST.getlist('test')
 
         # required for checkboxes
@@ -109,7 +104,13 @@ class TelegramsUpdateView(UpdateView):
         note = form.cleaned_data.get('note')
         confirm = form.cleaned_data.get('confirm')
         priority = form.cleaned_data.get('priority')
-        print(tlg_number)
+        if tlg_scan != self.tlg_output.tlg_scan:
+            print(tlg_scan)
+            print(True)
+            if os.path.exists(str(self.tlg_output.tlg_scan)):
+                os.remove(str(self.tlg_output.tlg_scan))
+            form.save()
+        form.save()
 
         return redirect('panel-home')
 
