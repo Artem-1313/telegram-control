@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    {% load static %}
+    {% load crispy_forms_tags %}
+    <link rel="stylesheet" type="text/css" href="{% static 'users/login.css' %}">
+</head>
+<body>
+<div class="form-div">
+    <form class="login_form" method="post">
+       {% csrf_token %}
+
+    <p> {{ form | crispy }}</p>
+
+
+
+
+
+    <button type="submit">Увійти</button>
+</form>
+</div>
+</body>
+</html>

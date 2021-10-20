@@ -10,4 +10,5 @@ urlpatterns = [
     path('update/<int:pk>/', TelegramsUpdateView.as_view(), name='telegram-update'),
     path('check/<int:pk>/', CheckUnits, name='check'),
 
+
 ]

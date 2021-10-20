@@ -1,28 +1,29 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from .models import Telegrams, Executors
 from .forms import AddTelegram, CheckForms
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView
-from django.contrib.auth.mixins import UserPassesTestMixin
+from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.contrib import messages
 import os
 
 # Create your views here.
 
 
-def index(request):
-    return render(request, 'panel/index.html')
+# def index(request):
+#     return render(request, 'panel/index.html')
 
 
-class TelegramsListView(ListView):
+class TelegramsListView(LoginRequiredMixin, ListView):
     model = Telegrams
     template_name = 'panel/index.html'
     context_object_name = "tlg"
     ordering = ['-date_create']
 
 
-class TelegramDetailView(DetailView):
+class TelegramDetailView(LoginRequiredMixin, DetailView):
     model = Telegrams
 
     def get_context_data(self, **kwargs):
@@ -34,7 +35,7 @@ class TelegramDetailView(DetailView):
         return context
 
 
-class TelegramsDeleteView(UserPassesTestMixin, DeleteView):
+class TelegramsDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Telegrams
     success_url = "/panel/"
 
@@ -46,7 +47,7 @@ class TelegramsDeleteView(UserPassesTestMixin, DeleteView):
         return False
 
 
-class TelegramsUpdateView(UpdateView):
+class TelegramsUpdateView(LoginRequiredMixin, UpdateView):
     model = Telegrams
     # form_class = AddTelegram
     success_url = "/panel/"
@@ -114,7 +115,7 @@ class TelegramsUpdateView(UpdateView):
 
         return redirect('panel-home')
 
-
+@login_required()
 def CheckUnits(request, pk):
     tlg = Telegrams.objects.get(id=pk)
     ttt = tlg.executors_set.all()
@@ -133,7 +134,7 @@ def CheckUnits(request, pk):
     return render(request, 'panel/telegrams_check.html', {'ttt': ttt, })
 
 
-
+@login_required
 def add_tlg(request):
     if request.method == 'POST':
         form = AddTelegram(request.POST, request.FILES)
