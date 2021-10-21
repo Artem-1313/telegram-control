@@ -16,11 +16,18 @@ import os
 #     return render(request, 'panel/index.html')
 
 
-class TelegramsListView(LoginRequiredMixin, ListView):
+class TelegramsListView(LoginRequiredMixin, ListView) :
     model = Telegrams
     template_name = 'panel/index.html'
-    context_object_name = "tlg"
+    #context_object_name = "tlg"
+    #queryset = Telegrams.objects.filter(author_id=2)
     ordering = ['-date_create']
+
+    def get_context_data(self,  **kwargs):
+        context = super(TelegramsListView, self).get_context_data(**kwargs)
+        context['tlg'] = Telegrams.objects.filter(author_id=self.request.user.id)
+        return context
+
 
 
 class TelegramDetailView(LoginRequiredMixin, DetailView):
@@ -47,7 +54,7 @@ class TelegramsDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return False
 
 
-class TelegramsUpdateView(LoginRequiredMixin, UpdateView):
+class TelegramsUpdateView(LoginRequiredMixin,  UserPassesTestMixin, UpdateView):
     model = Telegrams
     # form_class = AddTelegram
     success_url = "/panel/"
@@ -64,6 +71,13 @@ class TelegramsUpdateView(LoginRequiredMixin, UpdateView):
             tlg_exec_list.append(i.unit)
         # print(i.unit)
         return tlg_exec_list
+
+    def test_func(self):
+        tlg = self.get_object()
+        print(tlg)
+        if self.request.user == tlg.author:
+            return True
+        return False
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
