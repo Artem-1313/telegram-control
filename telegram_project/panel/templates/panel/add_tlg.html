@@ -1,7 +1,10 @@
 {% extends 'panel/base.html' %}
+
+
+
 {% load crispy_forms_tags %}
 {% block content %}
-<h1>TELEGRAM CONTROL PANEL PAGE!</h1>
+
 <div class="content-section">
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
@@ -14,4 +17,15 @@
 
 
 
+
+
 {% endblock%}
+
+<script>
+$("#id_deadline").datetimepicker({
+format:'Y-d-m H:m',
+minDate: 0
+
+
+});
+</script>
