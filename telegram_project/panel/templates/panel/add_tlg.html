@@ -15,17 +15,22 @@
 
 </div>
 
+<script>
+jQuery.datetimepicker.setLocale('uk');
+$("#id_deadline").datetimepicker({
 
+format:'Y-d-m H:m',
+minDate: 0,
+language: 'uk',
+locale: 'uk',
+allowTimes:[
+  '12:00', '13:00', '14:00',
+  '15:00', '16:00', '17:00', '18:00', '19:00'
+ ]
+});
+</script>
 
 
 
 {% endblock%}
 
-<script>
-$("#id_deadline").datetimepicker({
-format:'Y-d-m H:m',
-minDate: 0
-
-
-});
-</script>

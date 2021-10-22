@@ -61,6 +61,7 @@ class TelegramsUpdateView(LoginRequiredMixin,  UserPassesTestMixin, UpdateView):
     template_name = "panel/telegrams_update.html"
     fields = ['description', 'deadline', 'tlg_scan', 'tlg_number', 'note', 'confirm', 'priority', ]
 
+
     @property
     def get_units_db(self):
         tlg = Telegrams.objects.get(id=self.object.get_id())
@@ -74,7 +75,6 @@ class TelegramsUpdateView(LoginRequiredMixin,  UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         tlg = self.get_object()
-        print(tlg)
         if self.request.user == tlg.author:
             return True
         return False
