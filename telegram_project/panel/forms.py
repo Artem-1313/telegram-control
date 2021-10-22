@@ -10,14 +10,6 @@ class AddTelegram(forms.ModelForm):
     class Meta:
         model = Telegrams
         fields = ('deadline', 'description', 'tlg_scan', 'tlg_number', 'note', 'priority')
-        labels = {
-            "deadline": "Виконати до",
-            "description": "Опис телеграми",
-            "tlg_scan": "Скан-копія телеграми",
-            "tlg_number": "Номер телеграми",
-            "note": "Примітки",
-            "priority": "Важливість телеграми",
-        }
 
 
 class CheckForms(forms.Form):

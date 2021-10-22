@@ -1,22 +1,99 @@
 {% extends 'panel/base.html' %}
 {% block content %}
-<h1>TELEGRAM DETAIL!</h1>
 
-{{ object.author }}
-{{ object.description }}
-{{ object.deadline }}
-{{ object.tlg_number}}
-{{ object.priority }}
+<div class="container">
+    <div class="row">
+        <div class="col-7">
+             <h4> {% if object.priority == "1" %}
+            <i class="fas fa-exclamation fa-1x" style="color:red;"></i>
+
+            {% endif %}
+                 <i class="fas fa-envelope-open-text"></i> № {{ object.tlg_number}} від {{ object.date_create| date:"d.m.Y" }}</h4>
+        </div>
+
+        <div class="col-4">
+             <h4> <i class="fas fa-hourglass-half"></i>Виконати до {{ object.deadline | date:"d.m.Y H:m" }}</h4>
+        </div>
+    </div>
+      <div class="col-1">
+
+        </div>
+    <div class="row">
+      {{ object.description }}
+    </div>
+    <div class="row">
+        <div class="col">
+          <i class="fas fa-comment-alt"></i>
+        Примітки: {% if object.note %}
+        {{ object.note }}
+        {% else %}
+        коментарі відсутні!
+        {% endif %}
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="col">
+           <i class="fas fa-check-double"></i> Статус телеграми: {% if object.status %}
+           виконана!
+        {% else %}
+            не виконанa!
+        {% endif %}
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-3">
+            <i class="fas fa-users"></i> Розрахунок розсилки:
+        </div>
+         <div class="col-3">
+            Відмітка про виконання
+        </div>
+    </div>
+</div>
 {% for i in tlg %}
 
 {% if  i.status   %}
-   <div> <input type="checkbox" name="{{ i.unit }}" checked>
-    <label>{{ i.unit }}</label>
+
+   <div class="container">
+       <div class="row">
+
+       </div>
+       <div class="row">
+           <div class="col-4">
+                 <label>{{ i.unit }}</label>
+           </div>
+           <div class="col-2">
+
+               <i class="fas fa-plus"></i>
+           </div>
+       </div>
+
        </div>
 {% else %}
-    <div> <input type="checkbox" name="{{ i.unit }}" >
-    <label >{{ i.unit }}</label>
-    </div>
+     <div class="container">
+
+       <div class="row">
+           <div class="col-4">
+                 <label>{{ i.unit }}</label>
+           </div>
+
+            <div class="col-2">
+
+              <i class="fas fa-minus"></i>
+           </div>
+       </div>
+
+       </div>
 {% endif %}
 
 {% endfor %}

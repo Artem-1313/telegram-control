@@ -21,14 +21,15 @@ def user_directory_path(instance, filename):
 class Telegrams(models.Model):
     priority_ = [('1', 'Висока'), ('0', 'Низька')]
     date_create = models.DateTimeField(default=timezone.now)
-    description = models.TextField()
-    deadline = models.DateTimeField(default=timezone.now)
+    description = models.TextField(verbose_name= 'Опис телеграми')
+    deadline = models.DateTimeField(default=timezone.now, verbose_name='Виконати до')
     tlg_scan = models.FileField(upload_to=user_directory_path, null=True, blank=True,
-                                validators=[FileExtensionValidator(allowed_extensions=['txt'])])
-    tlg_number = models.CharField(max_length=100, null=True)
-    note = models.CharField(max_length=5000, null=True, blank=True)
-    confirm = models.BooleanField(default=False)
-    priority = models.CharField(max_length=20, choices=priority_, blank=True)
+                                validators=[FileExtensionValidator(allowed_extensions=['txt'])],
+                                verbose_name='Завантажити скан-копію телеграми')
+    tlg_number = models.CharField(max_length=100, null=True, verbose_name='Номер вихідної телеграми')
+    note = models.CharField(max_length=5000, null=True, blank=True, verbose_name='Примітки')
+    confirm = models.BooleanField(default=False, verbose_name='Телеграма виконана!')
+    priority = models.CharField(max_length=20, choices=priority_, blank=True, verbose_name='Важливість телеграми')
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):

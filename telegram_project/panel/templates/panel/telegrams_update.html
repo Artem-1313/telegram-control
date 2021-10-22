@@ -2,7 +2,6 @@
 
 {% load crispy_forms_tags %}
 {% block content %}
-<h1>TELEGRAM CONTROL PANEL PAGE!</h1>
 <div class="content-section">
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
@@ -32,5 +31,21 @@
             {{ message }}
     {% endfor %}
 </div>
+
+
 {% endif %}
+<script>
+jQuery.datetimepicker.setLocale('uk');
+$("#id_deadline").datetimepicker({
+
+format:'Y-m-d H:m',
+minDate: 0,
+language: 'uk',
+locale: 'uk',
+allowTimes:[
+  '12:00', '13:00', '14:00',
+  '15:00', '16:00', '17:00', '18:00', '19:00'
+ ]
+});
+</script>
 {% endblock%}

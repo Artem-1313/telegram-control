@@ -19,9 +19,7 @@ import os
 class TelegramsListView(LoginRequiredMixin, ListView) :
     model = Telegrams
     template_name = 'panel/index.html'
-    #context_object_name = "tlg"
-    #queryset = Telegrams.objects.filter(author_id=2)
-    ordering = ['-date_create']
+
 
     def get_context_data(self,  **kwargs):
         context = super(TelegramsListView, self).get_context_data(**kwargs)
@@ -160,11 +158,11 @@ def add_tlg(request):
             tlg_scan = form.cleaned_data.get('tlg_scan')
             tlg_number = form.cleaned_data.get('tlg_number')
             note = form.cleaned_data.get('note')
-            confirm = form.cleaned_data.get('confirm')
+           # confirm = form.cleaned_data.get('confirm')
             priority = form.cleaned_data.get('priority')
 
             tlg = Telegrams(deadline=deadline, description=description, author=user, tlg_scan=tlg_scan,
-                            tlg_number=tlg_number, note=note, confirm=confirm, priority=priority)
+                            tlg_number=tlg_number, note=note, priority=priority)
             tlg.save()
 
             executors = form.cleaned_data.get('executors')
