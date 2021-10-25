@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, FileResponse, Http404, HttpResponse
 from .models import Telegrams, Executors
 from .forms import AddTelegram, CheckForms
 from django.contrib.auth.models import User
@@ -134,16 +134,14 @@ def CheckUnits(request, pk):
     print(tlg.id)
     if request.method == 'POST':
         for i in ttt:
-            print(f"{i.unit}+{i.status}")
             Executors.objects.filter(telegrams_id=tlg.id, unit=i.unit).update(status=False)
         sss = request.POST
         print(sss.getlist('test'))
 
         for i in sss.getlist('test'):
-            print(i)
             Executors.objects.filter(telegrams_id=tlg.id, unit=i).update(status=True)
 
-    return render(request, 'panel/telegrams_check.html', {'ttt': ttt, })
+    return render(request, 'panel/telegrams_check.html', {'ttt': ttt, "tlg": tlg})
 
 
 @login_required
@@ -172,3 +170,23 @@ def add_tlg(request):
     else:
         form = AddTelegram()
     return render(request, 'panel/add_tlg.html', {'form': form})
+
+
+def pdf_view(request, pk):
+    try:
+        tlg = Telegrams.objects.get(id=pk)
+        return HttpResponse(open(str(tlg.tlg_scan), 'rb'), content_type='application/pdf')
+    except FileNotFoundError:
+        raise Http404()
+
+
+def search_by_unit(request, name):
+    ex = Executors.objects.filter(unit=name)
+    ex_status_true = Executors.objects.filter(unit=name, status=True).count()
+    ex_status_false = Executors.objects.filter(unit=name, status=False).count()
+
+    sum_ = ex_status_true+ex_status_false
+    return render(request, 'panel/units_detail_tlg.html', { "units": ex, "name": name,
+                                                           "ex_status_true": ex_status_true,
+                                                           "ex_status_false": ex_status_false,
+                                                           "sum_":sum_ })

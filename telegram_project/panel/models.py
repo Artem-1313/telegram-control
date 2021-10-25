@@ -24,7 +24,7 @@ class Telegrams(models.Model):
     description = models.TextField(verbose_name= 'Опис телеграми')
     deadline = models.DateTimeField(default=timezone.now, verbose_name='Виконати до')
     tlg_scan = models.FileField(upload_to=user_directory_path, null=True, blank=True,
-                                validators=[FileExtensionValidator(allowed_extensions=['txt'])],
+                                validators=[FileExtensionValidator(allowed_extensions=['pdf'])],
                                 verbose_name='Завантажити скан-копію телеграми')
     tlg_number = models.CharField(max_length=100, null=True, verbose_name='Номер вихідної телеграми')
     note = models.CharField(max_length=5000, null=True, blank=True, verbose_name='Примітки')

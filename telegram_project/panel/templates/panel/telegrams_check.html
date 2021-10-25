@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'panel/base.html' %}
+{% block content %}
+<br>
+
+<div>
+    Відмітьте/зніміть прапорцем напроти підрозділу, який відповів/невідповів на тлг {{  tlg.tlg_number }} від {{ tlg.date_create| date:"d.m.Y" }}
+</div>
+<hr>
+  <i class="fas fa-users"></i> Розрахунок розсилки:
   <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
   {% for i in ttt %}
@@ -21,10 +23,9 @@
 
 {% endfor %}
 
-  <button type="submit">OK</button>
+      <br>
+  <button type="submit" class="btn btn-primary">OK</button>
 
   </form>
 
-
-</body>
-</html>
+{% endblock %}

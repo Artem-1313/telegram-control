@@ -1,0 +1,27 @@
+{% extends 'panel/base.html' %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        {{ name }}
+    </div>
+    <div class="row">
+        Усього телеграм:{{ sum_ }}
+    </div>
+    <div class="row">
+        Виконаних телеграм:{{ ex_status_true }}
+    </div>
+    <div class="row">
+        Невиконаних телеграм:{{ ex_status_false }}
+        {% if ex_status_false %}
+           {% for i in units %}
+            {% if not i.status %}
+        <p><a href="{% url 'telegram-detail' i.telegrams.id %}"><i class="fas fa-info-circle"></i> {{ i.telegrams.tlg_number }} від {{ i.telegrams.date_create | date:"d.m.Y"}} </a></p>
+            {% endif %}
+            {% endfor %}
+
+        {% endif %}
+    </div>
+</div>
+
+
+{% endblock %}
