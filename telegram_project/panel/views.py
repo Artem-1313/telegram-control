@@ -213,13 +213,10 @@ class TelegramsSearchView(FormView):
 
     def get_queryset(self, **kwargs):
         name = self.request.GET.get('search_input', '')
-        date_create = self.request.GET.get('date_create','')
+        date_create = self.request.GET.get('date_create','2021-10-26 - 2021-10-29')
 
         def check_dates(input_):
-           if input_ is None:
-               input_ = "2021-10-26 - 2021-10-29"
            l = input_.split(" ")
-
            if l[0] == l[2]:
                d1 = l[0]+ " 00:00:01"
                d2 = l[0]+ " 23:59:59"
