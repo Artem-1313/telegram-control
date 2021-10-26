@@ -1,12 +1,15 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, FileResponse, Http404, HttpResponse
+from django.urls import reverse_lazy
+
 from .models import Telegrams, Executors
-from .forms import AddTelegram, CheckForms
+from .forms import AddTelegram, CheckForms, SearchTelegrams
 from django.contrib.auth.models import User
-from django.views.generic import ListView, DetailView, DeleteView, UpdateView
+from django.views.generic import ListView, DetailView, DeleteView, UpdateView, FormView
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.contrib import messages
+from django.db.models import Q
 import os
 
 # Create your views here.
@@ -172,6 +175,7 @@ def add_tlg(request):
     return render(request, 'panel/add_tlg.html', {'form': form})
 
 
+@login_required()
 def pdf_view(request, pk):
     try:
         tlg = Telegrams.objects.get(id=pk)
@@ -180,6 +184,7 @@ def pdf_view(request, pk):
         raise Http404()
 
 
+@login_required()
 def search_by_unit(request, name):
     ex = Executors.objects.filter(unit=name)
     ex_status_true = Executors.objects.filter(unit=name, status=True).count()
@@ -190,3 +195,40 @@ def search_by_unit(request, name):
                                                            "ex_status_true": ex_status_true,
                                                            "ex_status_false": ex_status_false,
                                                            "sum_":sum_ })
+
+
+class TelegramsSearchView(FormView):
+    template_name = 'panel/search.html'
+    model = Telegrams
+    form_class = SearchTelegrams
+    success_url = "/panel/"
+
+
+    def get_context_data(self, **kwargs):
+        context = super(TelegramsSearchView, self).get_context_data(**kwargs)
+        context['search_text'] = self.get_queryset()
+        return context
+
+
+
+    def get_queryset(self, **kwargs):
+        name = self.request.GET.get('search_input', '')
+        date_create = self.request.GET.get('date_create','')
+
+        def check_dates(input_):
+           if input_ is None:
+               input_ = "2021-10-26 - 2021-10-29"
+           l = input_.split(" ")
+
+           if l[0] == l[2]:
+               d1 = l[0]+ " 00:00:01"
+               d2 = l[0]+ " 23:59:59"
+               return [d1, d2]
+           else:
+               return [l[0], l[2]]
+
+        x = check_dates(date_create)
+
+        return Telegrams.objects.filter(Q(tlg_number__icontains=name) & Q(date_create__range=x))
+
+

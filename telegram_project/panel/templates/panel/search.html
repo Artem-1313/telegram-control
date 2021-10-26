@@ -1,0 +1,58 @@
+{% extends 'panel/base.html' %}
+
+
+
+{% load crispy_forms_tags %}
+{% block content %}
+{{ x }}
+
+<div class="content-section">
+    <form method="GET" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">OK</button>
+    </form>
+
+
+</div>
+<ul>
+  {% for i in search_text %}
+    <li>
+      {{ i }}
+    </li>
+  {% endfor %}
+</ul>
+
+<script>
+$('#id_date_create').daterangepicker({
+
+locale: {
+      format: 'YYYY-MM-DD',
+       "daysOfWeek": [
+            "НД",
+            "ПН",
+            "ВТ",
+            "СР",
+            "ЧТ",
+            "ПТ",
+            "СБ"
+        ],
+         "monthNames": [
+            "Січень",
+            "Лютий",
+            "Березень",
+            "Квітень",
+            "Травень",
+            "Червень",
+            "Липень",
+            "Серпень",
+            "Вересень",
+            "Жовтень",
+            "Листопад",
+            "Грудень"
+        ],
+         "firstDay": 1
+    }
+});
+</script>
+{% endblock %}

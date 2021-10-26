@@ -1,6 +1,6 @@
 from django.urls import path, include
 from . import views
-from .views import TelegramsListView, TelegramDetailView, TelegramsDeleteView, TelegramsUpdateView, CheckUnits, pdf_view
+from .views import TelegramsListView, TelegramDetailView, TelegramsDeleteView, TelegramsUpdateView, CheckUnits, TelegramsSearchView
 urlpatterns = [
 
     path('', TelegramsListView.as_view(), name="panel-home"),
@@ -10,6 +10,7 @@ urlpatterns = [
     path('update/<int:pk>/', TelegramsUpdateView.as_view(), name='telegram-update'),
     path('check/<int:pk>/', CheckUnits, name='check'),
     path('pdf_view/<int:pk>/', views.pdf_view, name='pdf-view'),
-    path('unit_detail/<str:name>/', views.search_by_unit, name='unit-detail')
+    path('unit_detail/<str:name>/', views.search_by_unit, name='unit-detail'),
+    path('search/', TelegramsSearchView.as_view(), name='search-telegrams'),
 
 ]
