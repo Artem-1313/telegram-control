@@ -29,7 +29,7 @@ class Telegrams(models.Model):
     tlg_number = models.CharField(max_length=100, null=True, verbose_name='Номер вихідної телеграми')
     note = models.CharField(max_length=5000, null=True, blank=True, verbose_name='Примітки')
     confirm = models.BooleanField(default=False, verbose_name='Телеграма виконана!')
-    priority = models.CharField(max_length=20, choices=priority_, blank=True, verbose_name='Важливість телеграми')
+    priority = models.CharField(max_length=20, choices=priority_, blank=True, verbose_name='Важливість телеграми', default=0)
     author = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):

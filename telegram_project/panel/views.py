@@ -12,6 +12,7 @@ from django.contrib import messages
 from django.db.models import Q
 import os
 
+
 # Create your views here.
 
 
@@ -19,16 +20,14 @@ import os
 #     return render(request, 'panel/index.html')
 
 
-class TelegramsListView(LoginRequiredMixin, ListView) :
+class TelegramsListView(LoginRequiredMixin, ListView):
     model = Telegrams
     template_name = 'panel/index.html'
 
-
-    def get_context_data(self,  **kwargs):
+    def get_context_data(self, **kwargs):
         context = super(TelegramsListView, self).get_context_data(**kwargs)
         context['tlg'] = Telegrams.objects.filter(author_id=self.request.user.id)
         return context
-
 
 
 class TelegramDetailView(LoginRequiredMixin, DetailView):
@@ -55,13 +54,12 @@ class TelegramsDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return False
 
 
-class TelegramsUpdateView(LoginRequiredMixin,  UserPassesTestMixin, UpdateView):
+class TelegramsUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Telegrams
     # form_class = AddTelegram
     success_url = "/panel/"
     template_name = "panel/telegrams_update.html"
     fields = ['description', 'deadline', 'tlg_scan', 'tlg_number', 'note', 'confirm', 'priority', ]
-
 
     @property
     def get_units_db(self):
@@ -130,6 +128,7 @@ class TelegramsUpdateView(LoginRequiredMixin,  UserPassesTestMixin, UpdateView):
 
         return redirect('panel-home')
 
+
 @login_required()
 def CheckUnits(request, pk):
     tlg = Telegrams.objects.get(id=pk)
@@ -159,7 +158,7 @@ def add_tlg(request):
             tlg_scan = form.cleaned_data.get('tlg_scan')
             tlg_number = form.cleaned_data.get('tlg_number')
             note = form.cleaned_data.get('note')
-           # confirm = form.cleaned_data.get('confirm')
+            # confirm = form.cleaned_data.get('confirm')
             priority = form.cleaned_data.get('priority')
 
             tlg = Telegrams(deadline=deadline, description=description, author=user, tlg_scan=tlg_scan,
@@ -190,11 +189,11 @@ def search_by_unit(request, name):
     ex_status_true = Executors.objects.filter(unit=name, status=True).count()
     ex_status_false = Executors.objects.filter(unit=name, status=False).count()
 
-    sum_ = ex_status_true+ex_status_false
-    return render(request, 'panel/units_detail_tlg.html', { "units": ex, "name": name,
+    sum_ = ex_status_true + ex_status_false
+    return render(request, 'panel/units_detail_tlg.html', {"units": ex, "name": name,
                                                            "ex_status_true": ex_status_true,
                                                            "ex_status_false": ex_status_false,
-                                                           "sum_":sum_ })
+                                                           "sum_": sum_})
 
 
 class TelegramsSearchView(FormView):
@@ -203,29 +202,31 @@ class TelegramsSearchView(FormView):
     form_class = SearchTelegrams
     success_url = "/panel/"
 
-
     def get_context_data(self, **kwargs):
         context = super(TelegramsSearchView, self).get_context_data(**kwargs)
         context['search_text'] = self.get_queryset()
         return context
 
-
-
     def get_queryset(self, **kwargs):
         name = self.request.GET.get('search_input', '')
-        date_create = self.request.GET.get('date_create','2021-10-26 - 2021-10-29')
-
+        date_create = self.request.GET.get('date_create', '2021-10-26 - 2021-10-29')
+        confirm: object = self.request.GET.get('confirm')
+        priority = self.request.GET.get('priority')
+        print(confirm)
+        
+        if not confirm: confirm = 0
+       
         def check_dates(input_):
-           l = input_.split(" ")
-           if l[0] == l[2]:
-               d1 = l[0]+ " 00:00:01"
-               d2 = l[0]+ " 23:59:59"
-               return [d1, d2]
-           else:
-               return [l[0], l[2]]
+
+            l = input_.split(" ")
+
+            if l[0] == l[2]:
+                d1 = l[0] + " 00:00:01"
+                d2 = l[0] + " 23:59:59"
+                return [d1, d2]
+            else:
+                return [l[0], l[2]]
 
         x = check_dates(date_create)
 
-        return Telegrams.objects.filter(Q(tlg_number__icontains=name) & Q(date_create__range=x))
-
-
+        return Telegrams.objects.filter(Q(tlg_number__icontains=name) & Q(date_create__range=x) & Q(confirm=confirm) & Q(priority=priority))

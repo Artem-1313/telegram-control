@@ -18,11 +18,11 @@ class CheckForms(forms.Form):
 
 
 class SearchTelegrams(forms.Form):
-    search_input = forms.CharField(max_length=100, required=False)
-    #confirm = forms.ChoiceField(widget=forms.CheckboxSelectMultiple, choices=[('0', 'Ні')], required=False)
-    # priority = forms.ChoiceField(widget=forms.RadioSelect,  choices=[('0', 'Низька'), ('1', 'Висока')], required=False)
-    date_create = forms.CharField(max_length=30, required=False)
-    # deadline = forms.CharField(max_length=30, required=False)
+    search_input = forms.CharField(max_length=100, required=False, label="Номер телеграми")
+    confirm = forms.ChoiceField(widget=forms.CheckboxSelectMultiple, choices=[('1', 'Так')], required=False, label="Статус телеграми (виконана/невиконана)")
+    priority = forms.ChoiceField(widget=forms.RadioSelect, choices=[('0', 'Низька'), ('1', 'Висока')], required=False, label="Пріорітет телеграми")
+    date_create = forms.CharField(max_length=30, required=False, label="Дата створення")
+    #deadline = forms.CharField(max_length=30, required=False)
 
 
 

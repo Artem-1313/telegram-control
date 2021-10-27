@@ -5,12 +5,15 @@
 {% load crispy_forms_tags %}
 {% block content %}
 {{ x }}
-
+<div class="container">
+    <br>
 <div class="content-section">
     <form method="GET" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">OK</button>
+
+        {{ form | crispy}}
+        <br>
+        <button type="submit" class="btn btn-primary">OK</button>
     </form>
 
 
@@ -22,9 +25,9 @@
     </li>
   {% endfor %}
 </ul>
-
+</div>
 <script>
-$('#id_date_create').daterangepicker({
+$('#id_date_create, #id_deadline').daterangepicker({
 
 locale: {
       format: 'YYYY-MM-DD',
@@ -54,5 +57,8 @@ locale: {
          "firstDay": 1
     }
 });
+
+$("#id_priority_0").prop("checked", true);
+
 </script>
 {% endblock %}
