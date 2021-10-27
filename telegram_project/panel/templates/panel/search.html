@@ -3,6 +3,7 @@
 
 
 {% load crispy_forms_tags %}
+{% load static %}
 {% block content %}
 {{ x }}
 <div class="container">
@@ -18,12 +19,24 @@
 
 
 </div>
-<ul>
+<br>
+    <ul style="list-style-type:none;">
+
+    {% if search_text %}
+   <h4> Результат пошуку</h4>
   {% for i in search_text %}
-    <li>
-      {{ i }}
-    </li>
-  {% endfor %}
+
+
+   <li>  <a href="{% url 'telegram-detail' i.id %}" ><i class="fas fa-envelope-open-text"></i>     {{ i.tlg_number }} від {{ i.date_create| date:"d.m.Y"}}</a></li>
+
+    {% endfor %}
+    {% else %}
+       <div style="text-align: center;">
+           <h4 >Результат пошуку не дав</h4>
+        <img src="{% static 'images/search_error.png' %}">
+
+           </div>
+     {% endif %}
 </ul>
 </div>
 <script>

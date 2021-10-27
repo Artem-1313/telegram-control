@@ -30,7 +30,7 @@ background:  #ffffff;;
     border: 1px solid #242c37;
     border-radius: 999px;
 
-    color: white;
+    color: black;
     text-align: center;
     outline:none;
     transition:0.25s;
@@ -51,7 +51,7 @@ button {
 .login_form input[type="text"]:hover, .login_form input[type="password"]:hover{
   width: 70%;
   border: 1px solid #42b9ac;
-  color:white;
+  color:black;
 
 }
 
