@@ -26,3 +26,7 @@ urlpatterns = [
     path('', views.index, name='index')
 
 ]
+
+handler404 = 'telegram_project.views.error_404_view'
+handler403 = 'telegram_project.views.error_403_view'
+

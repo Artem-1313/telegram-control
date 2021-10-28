@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  {% load static %}
+
+
+</head>
+<body>
+<div style="text-align:center;">
+    <img src="{% static 'telegram_project/images/403.gif' %}">
+    <p><h1>ЗАБОРОНЕНО!</h1></p>
+    Повернутись на головну сторінку!
+    <a href="{% url 'panel-home' %}">На головну</a>
+</div>
+
+</body>
+</html>

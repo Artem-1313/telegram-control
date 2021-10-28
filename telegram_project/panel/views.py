@@ -131,9 +131,13 @@ class TelegramsUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 @login_required()
 def CheckUnits(request, pk):
-    tlg = Telegrams.objects.get(id=pk)
+    try:
+        tlg = Telegrams.objects.get(id=pk)
+    except:
+        raise Http404()
+
     ttt = tlg.executors_set.all()
-    print(tlg.id)
+
     if request.method == 'POST':
         for i in ttt:
             Executors.objects.filter(telegrams_id=tlg.id, unit=i.unit).update(status=False)
