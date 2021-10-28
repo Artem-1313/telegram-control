@@ -1,8 +1,8 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect, FileResponse, Http404, HttpResponse
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseRedirect, FileResponse, Http404, HttpResponse, response
 from django.urls import reverse_lazy
-
+from django.core.paginator import Paginator
 from .models import Telegrams, Executors
 from .forms import AddTelegram, CheckForms, SearchTelegrams
 from django.contrib.auth.models import User
@@ -23,11 +23,10 @@ import os
 class TelegramsListView(LoginRequiredMixin, ListView):
     model = Telegrams
     template_name = 'panel/index.html'
+    paginate_by = 10
 
-    def get_context_data(self, **kwargs):
-        context = super(TelegramsListView, self).get_context_data(**kwargs)
-        context['tlg'] = Telegrams.objects.filter(author_id=self.request.user.id)
-        return context
+    def get_queryset(self):
+        return Telegrams.objects.all().filter(author_id=self.request.user.id).order_by('-deadline')
 
 
 class TelegramDetailView(LoginRequiredMixin, DetailView):
@@ -64,6 +63,7 @@ class TelegramsUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     @property
     def get_units_db(self):
         tlg = Telegrams.objects.get(id=self.object.get_id())
+        #tlg = get_object_or_404(Telegrams, id=self.object.get_id())
         self.tlg_output = Telegrams.objects.get(id=self.object.get_id())
         tlg_executors = tlg.executors_set.all()
         tlg_exec_list = []
@@ -230,3 +230,4 @@ class TelegramsSearchView(FormView):
         x = check_dates(date_create)
 
         return Telegrams.objects.filter(Q(tlg_number__icontains=name) & Q(date_create__range=x) & Q(confirm=confirm) & Q(priority=priority))
+
