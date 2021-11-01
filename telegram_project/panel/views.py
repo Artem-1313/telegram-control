@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect, FileResponse, Http404, HttpRespons
 from django.urls import reverse_lazy
 from django.core.paginator import Paginator
 from .models import Telegrams, Executors
-from .forms import AddTelegram, CheckForms, SearchTelegrams
+from .forms import AddTelegram, SearchTelegrams
 from django.contrib.auth.models import User
 from django.views.generic import ListView, DetailView, DeleteView, UpdateView, FormView
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
@@ -83,7 +83,11 @@ class TelegramsUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context = super(TelegramsUpdateView, self).get_context_data(**kwargs)
         # Add in a QuerySet of all the books
         tlg_exec_list = self.get_units_db
-        context['list'] = ['A2326', 'A0355', 'A1314', 'A1214', 'A0501']
+
+        context['list'] = ['A2326', 'A0355', 'A1214', 'A0501', 'A0536', 'A0693', 'A1302', 'A3283',
+                           'A1978', 'A1962', 'A0563', 'A1964', 'A0389', 'A0591', 'A3336', 'A1828', 'A3034', 'A1035', 'A0943',
+                           'A1823', 'A0891', 'A2129', 'A3139', 'A3750', 'A1363', 'A1588', 'A1361',
+                           'Дн ОТЦК та СП', 'Дон ОТЦК та СП', 'Зп ОТЦК та СП', 'Хар ОТЦК та СП', 'Луг ОТЦК та СП', 'A4226', '64 ПУСЗ та ІС']
         context['ttt'] = tlg_exec_list
         return context
 
@@ -106,18 +110,12 @@ class TelegramsUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
         # add executors-units to db
         if select_units:
-            print("ADD")
-            print(select_units)
             for i in select_units:
                 self.tlg_output.executors_set.create(unit=i)
         # section update telegram information
-        description = form.cleaned_data.get('description')
-        deadline = form.cleaned_data.get('deadline')
+
         tlg_scan = form.cleaned_data.get('tlg_scan')
-        tlg_number = form.cleaned_data.get('tlg_number')
-        note = form.cleaned_data.get('note')
-        confirm = form.cleaned_data.get('confirm')
-        priority = form.cleaned_data.get('priority')
+
         if tlg_scan != self.tlg_output.tlg_scan:
             print(tlg_scan)
             print(True)
@@ -131,21 +129,17 @@ class TelegramsUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 @login_required()
 def CheckUnits(request, pk):
-    try:
-        tlg = Telegrams.objects.get(id=pk)
-    except:
-        raise Http404()
 
+    tlg = Telegrams.objects.get(id=pk)
     ttt = tlg.executors_set.all()
-
     if request.method == 'POST':
         for i in ttt:
             Executors.objects.filter(telegrams_id=tlg.id, unit=i.unit).update(status=False)
         sss = request.POST
-        print(sss.getlist('test'))
 
         for i in sss.getlist('test'):
             Executors.objects.filter(telegrams_id=tlg.id, unit=i).update(status=True)
+        return redirect('panel-home ')
 
     return render(request, 'panel/telegrams_check.html', {'ttt': ttt, "tlg": tlg})
 
@@ -171,7 +165,10 @@ def add_tlg(request):
 
             executors = form.cleaned_data.get('executors')
             for i in executors:
-                tlg.executors_set.create(unit=i)
+                if i != 'ALL':
+                    tlg.executors_set.create(unit=i)
+
+            return redirect('panel-home')
 
     else:
         form = AddTelegram()

@@ -7,10 +7,14 @@
         {% csrf_token %}
         {{ form|crispy }}
         СПИСОК ЧАСТИН
+<div> <input type="checkbox"  value="all_un"  onClick="toggle(this)">
+              <label> Виділити всі </label>
+</div>
 {% for i in list %}
 
 {% if i in ttt %}
-   <div> <input type="checkbox" name="test1"  value="{{ i }}" checked>
+
+   <div> <input type="checkbox" name="test1"  value="{{ i }}"  checked>
          <label> {{ i }} </label>
    </div>
 {% else %}
@@ -34,6 +38,18 @@
 
 
 {% endif %}
+<script>
+  function toggle(source) {
+  checkboxes = document.getElementsByName('test1');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+  }
+   checkboxes = document.getElementsByName('test');
+  for(var i=0, n=checkboxes.length;i<n;i++) {
+    checkboxes[i].checked = source.checked;
+  }
+}
+</script>
 <script>
 jQuery.datetimepicker.setLocale('uk');
 $("#id_deadline").datetimepicker({

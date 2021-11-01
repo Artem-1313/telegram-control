@@ -14,7 +14,20 @@
 
 
 </div>
-
+<script>
+$('#id_executors_0').click(function(event) {
+    if(this.checked) {
+        // Iterate each checkbox
+        $(':checkbox').each(function() {
+            this.checked = true;
+        });
+    } else {
+        $(':checkbox').each(function() {
+            this.checked = false;
+        });
+    }
+});
+</script>
 <script>
 jQuery.datetimepicker.setLocale('uk');
 $("#id_deadline").datetimepicker({
