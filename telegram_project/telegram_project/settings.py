@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-ojfijl(32ta2(6^^625f55o$o1-_#7nki^1h=l%4k)csh10ktb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -33,12 +33,14 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'panel.apps.PanelConfig',
     'crispy_forms',
+    'calendarcontrol.apps.CalendarcontrolConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_cleanup.apps.CleanupConfig',
 
 
 ]
@@ -122,7 +124,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'static') ]
+#STATICFILES_DIRS = [ os.path.join(BASE_DIR, 'static') ]
+STATIC = [ os.path.join(BASE_DIR, 'static') ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'panel-home'
 LOGIN_URL = 'login'

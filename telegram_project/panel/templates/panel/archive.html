@@ -1,0 +1,55 @@
+{% extends 'panel/base.html' %}
+{% block content %}
+
+
+    <table class="table table-striped">
+        <thead class="">
+        <tr>
+
+            <th scope="col">Виконати до: </th>
+            <th scope="col">Опис телеграми </th>
+            <th scope="col">№ вих. телеграми </th>
+            <th scope="col">Змінити </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in object_list %}
+        <tr>
+
+            <td> {{ i.deadline | date:"d.m.Y H:m"}}</td>
+            <td> {{ i.description |slice:":71"}}</td>
+            <td> {{ i.tlg_number }}</td>
+
+            <td>
+                <button class="btn btn-info"><a href="{% url 'telegram-update' i.id %}" style="color:white;"><i class="fas fa-edit"></i></a></button>
+                <button class="btn btn-info"><a href="{% url 'check' i.id %}" style="color:white;"><i class="fas fa-check-square"></i></a></button>
+                <button class="btn btn-info"><a href="{% url 'telegram-detail' i.id %}" style="color:white;"><i class="fas fa-info-circle"></i></a></button>
+                <button class="btn btn-info"><a href="{% url 'telegram-delete' i.id %}" style="color: #c11818d1;"><i class="fas fa-trash"></i></a></button>
+            </td>
+        {% endfor %}
+</tr>
+        </tbody>
+    </table>
+ {% if is_paginated %}
+
+      {% if page_obj.has_previous %}
+        <a class="btn btn-outline-info mb-4" href="?page=1">Перша</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.previous_page_number }}">Попередня</a>
+      {% endif %}
+
+      {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+          <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+          <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+      {% endfor %}
+
+      {% if page_obj.has_next %}
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.next_page_number }}">Наступна</a>
+        <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">Попередня</a>
+      {% endif %}
+
+    {% endif %}
+
+{% endblock%}

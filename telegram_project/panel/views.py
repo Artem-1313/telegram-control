@@ -26,6 +26,15 @@ class TelegramsListView(LoginRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
+        return Telegrams.objects.all().filter(author_id=self.request.user.id, confirm=False).order_by('-deadline')
+
+
+class TelegramsArchive(LoginRequiredMixin, ListView):
+    model = Telegrams
+    template_name = 'panel/archive.html'
+    paginate_by = 10
+
+    def get_queryset(self):
         return Telegrams.objects.all().filter(author_id=self.request.user.id).order_by('-deadline')
 
 
@@ -139,7 +148,16 @@ def CheckUnits(request, pk):
 
         for i in sss.getlist('test'):
             Executors.objects.filter(telegrams_id=tlg.id, unit=i).update(status=True)
-        return redirect('panel-home ')
+        print(f"Усього тлг --> {len(Executors.objects.filter(telegrams_id=tlg.id).all())}, де виконано --> {len(Executors.objects.filter(telegrams_id=tlg.id, status=True).all())}")
+        if len(Executors.objects.filter(telegrams_id=tlg.id).all()) == len(Executors.objects.filter(telegrams_id=tlg.id, status=True).all()):
+            print("Всі виконали")
+            tlg.confirm = True
+            tlg.save()
+        else:
+            tlg.confirm = False
+            tlg.save()
+            print("Не всі виконані")
+        return redirect('panel-home')
 
     return render(request, 'panel/telegrams_check.html', {'ttt': ttt, "tlg": tlg})
 
@@ -178,6 +196,7 @@ def add_tlg(request):
 @login_required()
 def pdf_view(request, pk):
     try:
+
         tlg = Telegrams.objects.get(id=pk)
         return HttpResponse(open(str(tlg.tlg_scan), 'rb'), content_type='application/pdf')
     except FileNotFoundError:

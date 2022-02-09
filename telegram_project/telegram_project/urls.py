@@ -21,6 +21,7 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('panel/', include("panel.urls")),
+    path('control_up/', include('calendarcontrol.urls')),
     path('login/', auth_views.LoginView.as_view(template_name='telegram_project/login.html', redirect_authenticated_user=True), name="login"),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('', views.index, name='index')
